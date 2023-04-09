@@ -51,9 +51,12 @@ class ChatScreen extends StatefulWidget {
           children: [
             Flexible(
               child: ListView.builder(
-                  itemCount: 2,
+                  itemCount: 6,
                   itemBuilder: (context, index) {
-                    return const ChatWidget();
+                    return ChatWidget(
+                      msg: chatMessages[index]["msg"].toString(),
+                      chatIndex: int.parse(chatMessages[index]["chatIndex"].toString()),
+                    );
                   }),
             ),
             if (_isTyping) ...[
