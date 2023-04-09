@@ -1,8 +1,8 @@
 import 'package:chatgpt_course/constant/constant.dart';
+import 'package:chatgpt_course/widgets/chat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import '../services/assets_manager.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -12,15 +12,15 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  final bool _isTyping = true;
+  class _ChatScreenState extends State<ChatScreen> {
+    final bool _isTyping = true;
 
-  late TextEditingController textEditingController;
+    late TextEditingController textEditingController;
 
-  @override
+    @override
   void initState() {
-    textEditingController = TextEditingController();
-    super.initState();
+      textEditingController = TextEditingController();
+      super.initState();
   }
 
   @override
@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+            icon: const Icon(Icons.more_vert, color: Colors.white),
           ),
         ],
       ),
@@ -51,9 +51,9 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Flexible(
               child: ListView.builder(
-                  itemCount: 6,
+                  itemCount: 2,
                   itemBuilder: (context, index) {
-                    return const Text("Hello this is a text");
+                    return const ChatWidget();
                   }),
             ),
             if (_isTyping) ...[
@@ -98,4 +98,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
+  }
