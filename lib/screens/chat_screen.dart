@@ -1,9 +1,12 @@
 import 'package:chatgpt_course/constant/constant.dart';
 import 'package:chatgpt_course/widgets/chat_widget.dart';
+import 'package:chatgpt_course/widgets/text_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/assets_manager.dart';
+import 'package:chatgpt_course/services/services.dart';
+
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -41,7 +44,9 @@ class ChatScreen extends StatefulWidget {
         title: const Text("ChatGPT"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async{
+              await Services.showModalSheet(context: context);
+            },
             icon: const Icon(Icons.more_vert, color: Colors.white),
           ),
         ],
