@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:chatgpt_course/constant/constant.dart';
 import 'package:chatgpt_course/services/api_service.dart';
 import 'package:chatgpt_course/services/services.dart';
 import 'package:chatgpt_course/widgets/chat_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/modelsprovider.dart';
 import '../services/assets_manager.dart';
 import '../widgets/text_widgets.dart';
 
@@ -16,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final bool _isTyping = true;
+  bool _isTyping = false;
 
   late TextEditingController textEditingController;
 
@@ -34,6 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final modelsProvider = Provider.of<ModelsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
@@ -69,45 +74,55 @@ class _ChatScreenState extends State<ChatScreen> {
               const SpinKitThreeBounce(
                 color: Colors.white,
                 size: 18,
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Material(
-                color: cardColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: textEditingController,
-                          onSubmitted: (value) {
-                            // TODO send message
-                          },
-                          decoration: const InputDecoration.collapsed(
-                              hintText: "How can I help you",
-                              hintStyle: TextStyle(color: Colors.grey)),
-                        ),
+              ), ],
+            const SizedBox(
+              height: 15,
+            ),
+            Material(
+              color: cardColor,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: const TextStyle(color: Colors.white),
+                        controller: textEditingController,
+                        onSubmitted: (value) {
+                          // TODO send message
+                        },
+                        decoration: const InputDecoration.collapsed(
+                            hintText: "How can I help you",
+                            hintStyle: TextStyle(color: Colors.grey)),
                       ),
-                      IconButton(
-                          onPressed: () async {
-                            try {
-                              await ApiService.getModels();
-                            } catch (error) {
-                              print("error $error");
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.send,
-                            color: Colors.white,
-                          ))
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          try {
+                            setState(() {
+                              _isTyping = true;
+                            });
+                            await ApiService.sendMessage(
+                              message: textEditingController.text,
+                              modelId: modelsProvider.getCurrentModel,
+                            );
+                          } catch (error) {
+                            log("error $error");
+                          } finally {
+                            setState(() {
+                              _isTyping = false;
+                            });
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.white,
+                        ))
+                  ],
                 ),
               ),
-            ]
+            ),
+
           ],
         ),
       ),
