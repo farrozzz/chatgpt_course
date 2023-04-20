@@ -1,12 +1,12 @@
 import 'package:chatgpt_course/constant/constant.dart';
-import 'package:chatgpt_course/widgets/chat_widget.dart';
-import 'package:chatgpt_course/widgets/text_widgets.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../services/assets_manager.dart';
+import 'package:chatgpt_course/services/api_service.dart';
 import 'package:chatgpt_course/services/services.dart';
+import 'package:chatgpt_course/widgets/chat_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../services/assets_manager.dart';
+import '../widgets/text_widgets.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,15 +15,15 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-  class _ChatScreenState extends State<ChatScreen> {
-    final bool _isTyping = true;
+class _ChatScreenState extends State<ChatScreen> {
+  final bool _isTyping = true;
 
-    late TextEditingController textEditingController;
+  late TextEditingController textEditingController;
 
-    @override
+  @override
   void initState() {
-      textEditingController = TextEditingController();
-      super.initState();
+    textEditingController = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -44,10 +44,10 @@ class ChatScreen extends StatefulWidget {
         title: const Text("ChatGPT"),
         actions: [
           IconButton(
-            onPressed: () async{
+            onPressed: () async {
               await Services.showModalSheet(context: context);
             },
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
           ),
         ],
       ),
@@ -60,7 +60,8 @@ class ChatScreen extends StatefulWidget {
                   itemBuilder: (context, index) {
                     return ChatWidget(
                       msg: chatMessages[index]["msg"].toString(),
-                      chatIndex: int.parse(chatMessages[index]["chatIndex"].toString()),
+                      chatIndex: int.parse(
+                          chatMessages[index]["chatIndex"].toString()),
                     );
                   }),
             ),
@@ -69,7 +70,7 @@ class ChatScreen extends StatefulWidget {
                 color: Colors.white,
                 size: 18,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Material(
@@ -91,7 +92,13 @@ class ChatScreen extends StatefulWidget {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await ApiService.getModels();
+                            } catch (error) {
+                              print("error $error");
+                            }
+                          },
                           icon: const Icon(
                             Icons.send,
                             color: Colors.white,
@@ -106,4 +113,4 @@ class ChatScreen extends StatefulWidget {
       ),
     );
   }
-  }
+}
